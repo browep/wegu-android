@@ -1,22 +1,22 @@
 package com.github.browep.wegu;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Main extends Activity
 {
     LinearLayout mLinearLayout;
+
+    private static final String HOSTNAME = "http://wegu.heroku.com";
+    private static final String NEXT_IMAGE_PATH = "/images/next";
 
     private Drawable getDrawableFromUrl(String url) {
 		try {
@@ -32,6 +32,46 @@ public class Main extends Activity
 		}
 	}
 
+    public String convertStreamToString(InputStream is)
+            throws IOException {
+        /*
+         * To convert the InputStream to String we use the
+         * Reader.read(char[] buffer) method. We iterate until the
+         * Reader return -1 which means there's no more data to
+         * read. We use the StringWriter class to produce the string.
+         */
+        if (is != null) {
+            Writer writer = new StringWriter();
+
+            char[] buffer = new char[1024];
+            try {
+                Reader reader = new BufferedReader(
+                        new InputStreamReader(is, "UTF-8"));
+                int n;
+                while ((n = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, n);
+                }
+            } finally {
+                is.close();
+            }
+            return writer.toString();
+        } else {
+            return "";
+        }
+    }
+
+    public String fetchContents(String address) {
+        try {
+            InputStream is = (InputStream) this.fetch(address);
+            return convertStreamToString(is);
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return null;
+        }
+
+
+    }
+
 	public Object fetch(String address) throws MalformedURLException,IOException {
 		URL url = new URL(address);
 		Object content = url.getContent();
@@ -46,22 +86,15 @@ public class Main extends Activity
 
         super.onCreate(savedInstanceState);
 
-		// http://i.imgur.com/pOBdK.jpg
 	    // Create a LinearLayout in which to add the ImageView
 	    mLinearLayout = new LinearLayout(this);
-
-	    // download and store to SD card
-//	    try{
-//	    	final InputStream is = new URL("http://i.imgur.com/pOBdK.jpg").openStream();
-//	    }catch(IOException e){
-//	    	e.printStackTrace(System.err);
-//	    }
 
 
 	    // Instantiate an ImageView and define its properties
 	    ImageView i = new ImageView(this);
-//        i.setImageResource(R.drawable.two);
-	    i.setImageDrawable(getDrawableFromUrl("http://i.imgur.com/pOBdK.jpg"));
+        String url = fetchContents(HOSTNAME + NEXT_IMAGE_PATH);
+//        String url = "http://wegu.heroku.com/images/next";
+        i.setImageDrawable(getDrawableFromUrl(url));
 	    i.setAdjustViewBounds(true); // set the ImageView bounds to match the Drawable's dimensions
 	    i.setLayoutParams(new Gallery.LayoutParams(Gallery.LayoutParams.WRAP_CONTENT, Gallery.LayoutParams.WRAP_CONTENT));
 
