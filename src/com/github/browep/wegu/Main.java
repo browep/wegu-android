@@ -82,7 +82,6 @@ public class Main extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
 
         super.onCreate(savedInstanceState);
 
