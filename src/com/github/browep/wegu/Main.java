@@ -3,6 +3,8 @@ package com.github.browep.wegu;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -85,6 +87,18 @@ public class Main extends Activity
 
         super.onCreate(savedInstanceState);
 
+
+        final Window win = getWindow();
+        win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        // Turn on the screen unless we are being launched from the AlarmAlert
+        // subclass.
+        if (!getIntent().getBooleanExtra(Constants.SCREEN_OFF, false)) {
+            win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                    | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
+        }
+
 	    // Create a LinearLayout in which to add the ImageView
 	    mLinearLayout = new LinearLayout(this);
 
@@ -92,7 +106,6 @@ public class Main extends Activity
 	    // Instantiate an ImageView and define its properties
 	    ImageView i = new ImageView(this);
         String url = fetchContents(HOSTNAME + NEXT_IMAGE_PATH);
-//        String url = "http://wegu.heroku.com/images/next";
         i.setImageDrawable(getDrawableFromUrl(url));
 	    i.setAdjustViewBounds(true); // set the ImageView bounds to match the Drawable's dimensions
 	    i.setLayoutParams(new Gallery.LayoutParams(Gallery.LayoutParams.WRAP_CONTENT, Gallery.LayoutParams.WRAP_CONTENT));
@@ -100,5 +113,8 @@ public class Main extends Activity
 	    // Add the ImageView to the layout and set the layout as the content view
 	    mLinearLayout.addView(i);
 	    setContentView(mLinearLayout);
+
+//        updateLayout();
+
     }
 }

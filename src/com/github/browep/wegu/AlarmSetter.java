@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.*;
 import com.github.browep.wegu.util.Utils;
@@ -18,7 +19,7 @@ import com.github.browep.wegu.util.Utils;
  * To change this template use File | Settings | File Templates.
  */
 public class AlarmSetter extends Activity {
-    private static final int MILLIS_IN_THE_FUTURE = 10   * 1000;
+    private static final int MILLIS_IN_THE_FUTURE = 30   * 1000;
     PendingIntent mainIntent;
 
     /**
@@ -30,11 +31,12 @@ public class AlarmSetter extends Activity {
 
         setContentView(R.layout.alarm_setter);
 
-        Intent intent = new Intent(this, Main.class);
+//        Intent intent = new Intent(this, Main.class);
+        Intent intent = new Intent(Constants.ALARM_ALERT_ACTION);
 
-        mainIntent = PendingIntent.getActivity(this, 0,
-                intent
-                , Intent.FLAG_ACTIVITY_NEW_TASK);
+        mainIntent = PendingIntent.getBroadcast(
+                        getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
 
         Button button = (Button) findViewById(R.id.start_alarm);
         button.setOnClickListener(startAlarmListener);
@@ -52,10 +54,8 @@ public class AlarmSetter extends Activity {
             AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 
 //            am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + MILLIS_IN_THE_FUTURE, mainIntent);
-//            am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + MILLIS_IN_THE_FUTURE, mainIntent);
+            am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + MILLIS_IN_THE_FUTURE, mainIntent);
 
-            AlarmReceiver alarmReceiver = new AlarmReceiver();
-//            alarmReceiver.get
 
 
             Utils.shortToastMessage(context, "Alarm set for " + MILLIS_IN_THE_FUTURE / 1000 + " seconds in the future.", startAlarmToast);

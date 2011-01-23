@@ -8,6 +8,7 @@ package com.github.browep.wegu;
  * To change this template use File | Settings | File Templates.
  */
 public class Constants {
-    public static final  String ALARM_ALERT_ACTION = "com.github.browep.wegu.ALARM_ALERT";
+    public static final String ALARM_ALERT_ACTION = "com.github.browep.wegu.ALARM_ALERT";
+    public static final String SCREEN_OFF = "screen_off";
 
 }

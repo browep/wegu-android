@@ -1,11 +1,14 @@
 package com.github.browep.wegu;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import com.github.browep.wegu.util.AlarmAlertWakeLock;
 import com.github.browep.wegu.util.Utils;
+import com.github.browep.wegu.util.Log;
 
 
 /**
@@ -19,16 +22,27 @@ public class AlarmReceiver extends BroadcastReceiver {
       // Display an alert that we've received a message.
     @Override
     public void onReceive(Context context, Intent intent){
+        Log.i("AlarmReceiver received an alarm");
             // Send a text notification to the screen.
-        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//        nm.notifyWithText(R.id.alarm,
-//                          "WEGU Alarm!!!",
-//                          NotificationManager.LENGTH_SHORT,
-//                          null);
-        Notification notification = new Notification(0, "WEGU Alarm!", System.currentTimeMillis());
-        nm.notify(0, notification);
+//        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//        Notification notification = new Notification(0, "WEGU Alarm!", System.currentTimeMillis());
+//        nm.notify(0, notification);
 
-        Utils.shortToastMessage(context,"WEGU Alarm!");
+//        Utils.shortToastMessage(context,"WEGU Alarm!");
+
+        // acquire cpu lock
+        AlarmAlertWakeLock.acquireCpuWakeLock(context);
+
+        Intent playAlarm = new Intent(context,Main.class);
+        playAlarm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
+        context.startActivity(playAlarm);
+
+
+
+
+
    }
 
 }
