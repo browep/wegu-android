@@ -1,5 +1,7 @@
 package com.github.browep.wegu;
 
+import java.util.Calendar;
+
 /**
  * Created by IntelliJ IDEA.
  * User: paul
@@ -14,4 +16,15 @@ public class Constants {
 
 
     public static final String CURRENT_DATE_LONG = "current_date_long";
+
+
+    private static int[] DAY_MAP = new int[]{
+            Calendar.MONDAY,
+            Calendar.TUESDAY,
+            Calendar.WEDNESDAY,
+            Calendar.THURSDAY,
+            Calendar.FRIDAY,
+            Calendar.SATURDAY,
+            Calendar.SUNDAY,
+    };
 }

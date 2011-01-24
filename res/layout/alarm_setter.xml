@@ -37,6 +37,12 @@
             android:paddingBottom="4dip"
             android:text=""/>
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:id="@+id/days_of_week_layout"
+                  android:layout_width="wrap_content" android:layout_height="wrap_content"
+            />
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="horizontal"
                   android:padding="4dip"
                   android:gravity="center_horizontal"

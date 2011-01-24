@@ -1,7 +1,9 @@
 package com.github.browep.wegu.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Toast;
+import com.github.browep.wegu.Constants;
 
 /**
  * Created by IntelliJ IDEA.

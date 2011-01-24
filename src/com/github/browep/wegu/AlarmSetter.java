@@ -10,10 +10,12 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.*;
+import android.widget.Button;
 import com.github.browep.wegu.util.Utils;
 
 import java.util.Calendar;
 import java.util.Date;
+import android.widget.CheckBox;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,10 +24,11 @@ import java.util.Date;
  * Time: 10:18 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AlarmSetter extends Activity {
+public class AlarmSetter extends WeguActivity {
     private static final int MILLIS_IN_THE_FUTURE = 5 * 1000;
     PendingIntent mainIntent;
 
+    private AlarmSetter self = this;
     /**
      * Called when the activity is first created.
      */
@@ -33,8 +36,7 @@ public class AlarmSetter extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences settings = getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
-        Long currentDateLong = settings.getLong(Constants.CURRENT_DATE_LONG, 0);
+        Long currentDateLong = getLongPreference(Constants.CURRENT_DATE_LONG);
         TextView currentTimeTextView = (TextView) findViewById(R.id.current_alarm_time);
         if(currentDateLong != 0){
             Calendar currentAlarmDate = Calendar.getInstance();
@@ -44,14 +46,20 @@ public class AlarmSetter extends Activity {
 
         setContentView(R.layout.alarm_setter);
 
+
+        final CheckBox checkBox = new CheckBox(getApplicationContext());
+        checkBox.setChecked(false);
+        checkBox.setText("Monday");
+        LinearLayout daysOfWeekLayout = (LinearLayout) findViewById(R.id.days_of_week_layout);
+        daysOfWeekLayout.addView(checkBox);
+
         Intent intent = new Intent(Constants.ALARM_ALERT_ACTION);
 
         mainIntent = PendingIntent.getBroadcast(
                         getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-
         Button button = (Button) findViewById(R.id.start_alarm);
-        button.setOnClickListener(startAlarmListener);
+        button.setOnClickListener(openAlarmDialog);
 
         Button cancelButton = (Button) findViewById(R.id.stop_alarm);
         cancelButton.setOnClickListener(stopAlarmListener);
@@ -72,6 +80,15 @@ public class AlarmSetter extends Activity {
 
         }
     };
+
+
+    private  View.OnClickListener openAlarmDialog = new View.OnClickListener() {
+        public void onClick(View view) {
+            Intent setAlarmIntent = new Intent();
+            setAlarmIntent.setClass(self,AlarmChooser.class);
+            startActivity(setAlarmIntent);
+        }
+    } ;
 
 
     private View.OnClickListener stopAlarmListener = new View.OnClickListener() {
