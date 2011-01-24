@@ -5,11 +5,15 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.*;
 import com.github.browep.wegu.util.Utils;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,7 +23,7 @@ import com.github.browep.wegu.util.Utils;
  * To change this template use File | Settings | File Templates.
  */
 public class AlarmSetter extends Activity {
-    private static final int MILLIS_IN_THE_FUTURE = 30   * 1000;
+    private static final int MILLIS_IN_THE_FUTURE = 5 * 1000;
     PendingIntent mainIntent;
 
     /**
@@ -29,9 +33,17 @@ public class AlarmSetter extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
+        Long currentDateLong = settings.getLong(Constants.CURRENT_DATE_LONG, 0);
+        TextView currentTimeTextView = (TextView) findViewById(R.id.current_alarm_time);
+        if(currentDateLong != 0){
+            Calendar currentAlarmDate = Calendar.getInstance();
+            currentAlarmDate.setTimeInMillis(currentDateLong);
+            currentTimeTextView.setText("Alarm is currently set for " + currentAlarmDate.toString());
+        }
+
         setContentView(R.layout.alarm_setter);
 
-//        Intent intent = new Intent(this, Main.class);
         Intent intent = new Intent(Constants.ALARM_ALERT_ACTION);
 
         mainIntent = PendingIntent.getBroadcast(
@@ -55,8 +67,6 @@ public class AlarmSetter extends Activity {
 
 //            am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + MILLIS_IN_THE_FUTURE, mainIntent);
             am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + MILLIS_IN_THE_FUTURE, mainIntent);
-
-
 
             Utils.shortToastMessage(context, "Alarm set for " + MILLIS_IN_THE_FUTURE / 1000 + " seconds in the future.", startAlarmToast);
 

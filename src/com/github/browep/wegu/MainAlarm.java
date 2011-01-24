@@ -13,7 +13,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Main extends Activity
+public class MainAlarm extends Activity
 {
     LinearLayout mLinearLayout;
 

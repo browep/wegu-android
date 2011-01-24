@@ -1,13 +1,9 @@
 package com.github.browep.wegu;
 
-import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import com.github.browep.wegu.util.AlarmAlertWakeLock;
-import com.github.browep.wegu.util.Utils;
 import com.github.browep.wegu.util.Log;
 
 
@@ -33,7 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         // acquire cpu lock
         AlarmAlertWakeLock.acquireCpuWakeLock(context);
 
-        Intent playAlarm = new Intent(context,Main.class);
+        Intent playAlarm = new Intent(context,MainAlarm.class);
         playAlarm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 

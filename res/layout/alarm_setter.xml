@@ -17,31 +17,50 @@
 <!-- Demonstrates starting and stopping a local service.
      See corresponding Java code com.android.sdk.app.LocalSerice.java. -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:padding="4dip"
-    android:gravity="center_horizontal"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical"
+              android:padding="4dip"
+              android:gravity="center_horizontal"
+              android:layout_width="match_parent" android:layout_height="match_parent">
+
 
     <TextView
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:paddingBottom="4dip"
-        android:text="@string/set_alarm_explanation"/>
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:paddingBottom="4dip"
+            android:text="@string/set_alarm_explanation"/>
 
-    <Button android:id="@+id/start_alarm"
-        android:layout_width="wrap_content" android:layout_height="wrap_content" 
-        android:text="@string/set_alarm_button_text">
-        <requestFocus />
-    </Button>
+    <TextView android:id="@+id/current_alarm_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_margin="15px"
+            android:paddingBottom="4dip"
+            android:text=""/>
 
-    <Button android:id="@+id/stop_alarm"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="@string/stop_alarm_button_text">
-        <requestFocus />
-    </Button>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="horizontal"
+                  android:padding="4dip"
+                  android:gravity="center_horizontal"
+                  android:layout_width="match_parent" android:layout_height="match_parent">
+        <Button
+                android:layout_margin="10px"
+                android:width="100px"
+                android:id="@+id/start_alarm"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/set_alarm_button_text">
+            <requestFocus/>
+        </Button>
 
-    <!--<Button android:id="@+id/stop_alarm"-->
-        <!--android:layout_width="wrap_content" android:layout_height="wrap_content" -->
-        <!--android:text="@string/stop_alarm_service" />-->
+        <Button
+                android:width="100px"
+                android:layout_margin="10px"
+                android:id="@+id/stop_alarm"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/stop_alarm_button_text">
+            <requestFocus/>
+        </Button>
+    </LinearLayout>
+
+
 
 </LinearLayout>
 
