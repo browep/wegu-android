@@ -26,6 +26,7 @@ import android.widget.CheckBox;
  */
 public class AlarmSetter extends WeguActivity {
     private static final int MILLIS_IN_THE_FUTURE = 5 * 1000;
+
     PendingIntent mainIntent;
 
     private AlarmSetter self = this;
@@ -46,12 +47,19 @@ public class AlarmSetter extends WeguActivity {
 
         setContentView(R.layout.alarm_setter);
 
+        CheckBox checkBox;
+        for (int i=0;i<Constants.DAY_MAP.length;i++) {
 
-        final CheckBox checkBox = new CheckBox(getApplicationContext());
-        checkBox.setChecked(false);
-        checkBox.setText("Monday");
-        LinearLayout daysOfWeekLayout = (LinearLayout) findViewById(R.id.days_of_week_layout);
-        daysOfWeekLayout.addView(checkBox);
+            checkBox = new CheckBox(getApplicationContext());
+            checkBox.setChecked(false);
+            checkBox.setText(Constants.DAY_MAP_NAMES[i]);
+            checkBox.setId(Constants.CHECKBOX_PREPEND + i);
+            if(i < 5)
+                ((LinearLayout) findViewById(R.id.days_of_week_layout)).addView(checkBox);
+            else
+                ((LinearLayout) findViewById(R.id.sat_sun_layout)).addView(checkBox);
+
+        }
 
         Intent intent = new Intent(Constants.ALARM_ALERT_ACTION);
 
@@ -84,9 +92,16 @@ public class AlarmSetter extends WeguActivity {
 
     private  View.OnClickListener openAlarmDialog = new View.OnClickListener() {
         public void onClick(View view) {
-            Intent setAlarmIntent = new Intent();
-            setAlarmIntent.setClass(self,AlarmChooser.class);
-            startActivity(setAlarmIntent);
+            StringBuilder sb = new StringBuilder("Alarm will fire on days: ");
+            for(int i=0;i<Constants.DAY_MAP.length;i++){
+
+                CheckBox cb = (CheckBox) findViewById(Constants.CHECKBOX_PREPEND + i);
+                if (cb.isChecked()){
+                    sb.append(Constants.DAY_MAP_NAMES[i]).append(", ");
+                }
+            }
+            Utils.shortToastMessage(getApplicationContext(),sb.toString());
+
         }
     } ;
 

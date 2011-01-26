@@ -20,6 +20,8 @@
     <string name="set_alarm_button_text">Set Alarm</string>
     <string name="set_alarm_explanation">You are about to set an alarm.</string>
     <string name="activity_sample_code">API Demos</string>
+    <string name="welcome_top_blurb">Welcome to "Why Even Get Up?"  Set your alarm time and days of the week by hitting "Edit Alarm"</string>
+    <string name="edit_alarm_button_text">Edit Alarm</string>
 
     <!-- =============================== -->
     <!--  app/activity examples strings  -->

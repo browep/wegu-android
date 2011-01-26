@@ -7,6 +7,9 @@ package com.github.browep.wegu.util;
  * Time: 10:16 PM
  * To change this template use File | Settings | File Templates.
  */
-public class HashMap {
+public class HashMap extends java.util.HashMap {
+
+
+
 
 }
