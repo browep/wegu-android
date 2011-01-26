@@ -129,31 +129,6 @@ public class AlarmSetter extends WeguActivity {
         }
     } ;
 
-    private int getMinute() {
-        return getIntPreference(Constants.MINUTE_OF_DAY);
-    }
-
-    private int get24HourOfDay() {
-        return getIntPreference(Constants.HOUR_OF_DAY);
-    }
-
-    private String getAMorPM() {
-        int hour = get24HourOfDay();
-        if(hour < 12)
-            return "AM";
-        else
-            return "PM";
-    }
-
-    private int getDisplayHourOfDay(){
-        int hour = get24HourOfDay();
-        hour = hour % 12;
-        if(hour == 0)
-            return 12;
-        else
-            return hour;
-    }
-
 
     private View.OnClickListener stopAlarmListener = new View.OnClickListener() {
         public void onClick(View v) {

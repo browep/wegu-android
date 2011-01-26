@@ -33,4 +33,29 @@ public abstract class WeguActivity extends Activity {
         editor.putInt(prefName,value);
         editor.commit();
     }
+
+    protected int getMinute() {
+        return getIntPreference(Constants.MINUTE_OF_DAY);
+    }
+
+    protected int get24HourOfDay() {
+        return getIntPreference(Constants.HOUR_OF_DAY);
+    }
+
+    protected String getAMorPM() {
+        int hour = get24HourOfDay();
+        if(hour < 12)
+            return "AM";
+        else
+            return "PM";
+    }
+
+    protected int getDisplayHourOfDay(){
+        int hour = get24HourOfDay();
+        hour = hour % 12;
+        if(hour == 0)
+            return 12;
+        else
+            return hour;
+    }
 }
