@@ -1,8 +1,6 @@
 package com.github.browep.wegu;
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +9,7 @@ import android.os.SystemClock;
 import android.view.View;
 import android.widget.*;
 import android.widget.Button;
+import com.github.browep.wegu.util.Log;
 import com.github.browep.wegu.util.Utils;
 
 import java.util.Calendar;
@@ -71,6 +70,30 @@ public class AlarmSetter extends WeguActivity {
 
         Button cancelButton = (Button) findViewById(R.id.stop_alarm);
         cancelButton.setOnClickListener(stopAlarmListener);
+
+        Button timeButton = (Button) findViewById(R.id.time_display);
+        timeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showDialog(Constants.TIME_DIALOG_ID);
+            }
+        });
+
+        // update the time display
+        updateTimeDisplay();
+
+
+    }
+
+    private void updateTimeDisplay() {
+        // time button
+        Button timeButton = (Button) findViewById(R.id.time_display);
+        int hour = getDisplayHourOfDay();
+        if (hour < 0)
+            hour = Calendar.getInstance().get(Calendar.HOUR);
+        int minute = getMinute();
+        if(minute < 0)
+            minute = Calendar.getInstance().get(Calendar.MINUTE);
+        timeButton.setText(hour + ":" + minute + " " + getAMorPM());
     }
 
 
@@ -100,10 +123,36 @@ public class AlarmSetter extends WeguActivity {
                     sb.append(Constants.DAY_MAP_NAMES[i]).append(", ");
                 }
             }
+            sb.append(" at " ).append(getDisplayHourOfDay()).append(":").append(getMinute()).append(" ").append(getAMorPM());
             Utils.shortToastMessage(getApplicationContext(),sb.toString());
 
         }
     } ;
+
+    private int getMinute() {
+        return getIntPreference(Constants.MINUTE_OF_DAY);
+    }
+
+    private int get24HourOfDay() {
+        return getIntPreference(Constants.HOUR_OF_DAY);
+    }
+
+    private String getAMorPM() {
+        int hour = get24HourOfDay();
+        if(hour < 12)
+            return "AM";
+        else
+            return "PM";
+    }
+
+    private int getDisplayHourOfDay(){
+        int hour = get24HourOfDay();
+        hour = hour % 12;
+        if(hour == 0)
+            return 12;
+        else
+            return hour;
+    }
 
 
     private View.OnClickListener stopAlarmListener = new View.OnClickListener() {
@@ -114,6 +163,31 @@ public class AlarmSetter extends WeguActivity {
             am.cancel(mainIntent);
             Utils.shortToastMessage(getApplicationContext(), "Alarm canceled.", cancelingToast);
 
+        }
+    };
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case Constants.TIME_DIALOG_ID:
+                int hour = get24HourOfDay();
+                if (hour < 0)
+                    hour = Calendar.getInstance().get(Calendar.HOUR);
+                int minute = getMinute();
+                if(minute < 0)
+                    minute = Calendar.getInstance().get(Calendar.MINUTE);
+                return new TimePickerDialog(this,
+                        mTimeSetListener, hour, minute, false);
+        }
+        return null;
+    }
+
+    private TimePickerDialog.OnTimeSetListener mTimeSetListener =
+    new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            setIntPreference(Constants.HOUR_OF_DAY, hourOfDay);
+            setIntPreference(Constants.MINUTE_OF_DAY, minute);
+            updateTimeDisplay();
         }
     };
 

@@ -21,4 +21,16 @@ public abstract class WeguActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
         return settings.getBoolean(prefName, false);
     }
+
+    public int getIntPreference(String prefName){
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
+        return settings.getInt(prefName, -1);
+    }
+
+    public void setIntPreference(String prefName, int value){
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_FILE_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(prefName,value);
+        editor.commit();
+    }
 }

@@ -16,6 +16,9 @@ public class Constants {
     public static int CHECKBOX_PREPEND = 333000;
     public static final String CURRENT_DATE_LONG = "current_date_long";
 
+    static final int TIME_DIALOG_ID = 0;
+
+
     public static int[] DAY_MAP = new int[]{
             Calendar.MONDAY,
             Calendar.TUESDAY,
@@ -35,4 +38,6 @@ public class Constants {
             "Saturday",
             "Sunday",
     };
+    public static final String HOUR_OF_DAY = "hour_of_day";
+    public static final String MINUTE_OF_DAY = "minute_of_day";
 }
