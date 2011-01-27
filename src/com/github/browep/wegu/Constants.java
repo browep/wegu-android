@@ -40,4 +40,5 @@ public class Constants {
     };
     public static final String HOUR_OF_DAY = "hour_of_day";
     public static final String MINUTE_OF_DAY = "minute_of_day";
+    public static final String DAY_PREPEND = "day_set_";
 }

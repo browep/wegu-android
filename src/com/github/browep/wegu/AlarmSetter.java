@@ -3,7 +3,6 @@ package com.github.browep.wegu;
 import android.app.*;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
@@ -13,7 +12,9 @@ import com.github.browep.wegu.util.Log;
 import com.github.browep.wegu.util.Utils;
 
 import java.util.Calendar;
-import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 import android.widget.CheckBox;
 
 /**
@@ -25,6 +26,9 @@ import android.widget.CheckBox;
  */
 public class AlarmSetter extends WeguActivity {
     private static final int MILLIS_IN_THE_FUTURE = 5 * 1000;
+    private int minutes;
+    private int hours;
+    private boolean[] days = new boolean[7];
 
     PendingIntent mainIntent;
 
@@ -36,23 +40,34 @@ public class AlarmSetter extends WeguActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Long currentDateLong = getLongPreference(Constants.CURRENT_DATE_LONG);
-        TextView currentTimeTextView = (TextView) findViewById(R.id.current_alarm_time);
-        if(currentDateLong != 0){
-            Calendar currentAlarmDate = Calendar.getInstance();
-            currentAlarmDate.setTimeInMillis(currentDateLong);
-            currentTimeTextView.setText("Alarm is currently set for " + currentAlarmDate.toString());
-        }
+        // initialize from stored or default to now
+        hours = getIntPreference(Constants.HOUR_OF_DAY);
+        if(hours < 0)
+            hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
+        minutes = getIntPreference(Constants.MINUTE_OF_DAY);
+        if(minutes < 0)
+            minutes = Calendar.getInstance().get(Calendar.MINUTE);
+        days = getDays();
+
+        // we have to set the content view before we try and find the days of the week as they wont be there if we dont
         setContentView(R.layout.alarm_setter);
 
-        CheckBox checkBox;
         for (int i=0;i<Constants.DAY_MAP.length;i++) {
 
+            final int id = i;
+            final CheckBox checkBox;
+
             checkBox = new CheckBox(getApplicationContext());
-            checkBox.setChecked(false);
+            checkBox.setChecked(days[i]);
+
             checkBox.setText(Constants.DAY_MAP_NAMES[i]);
             checkBox.setId(Constants.CHECKBOX_PREPEND + i);
+            checkBox.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View view) {
+                    days[id] = checkBox.isChecked();
+                }
+            });
             if(i < 5)
                 ((LinearLayout) findViewById(R.id.days_of_week_layout)).addView(checkBox);
             else
@@ -60,16 +75,13 @@ public class AlarmSetter extends WeguActivity {
 
         }
 
-        Intent intent = new Intent(Constants.ALARM_ALERT_ACTION);
-
-        mainIntent = PendingIntent.getBroadcast(
-                        getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        mainIntent = getAlarmPendingIntent();
 
         Button button = (Button) findViewById(R.id.start_alarm);
-        button.setOnClickListener(openAlarmDialog);
+        button.setOnClickListener(setAlarmClickListener);
 
-        Button cancelButton = (Button) findViewById(R.id.stop_alarm);
-        cancelButton.setOnClickListener(stopAlarmListener);
+//        Button cancelButton = (Button) findViewById(R.id.stop_alarm);
+//        cancelButton.setOnClickListener(stopAlarmListener);
 
         Button timeButton = (Button) findViewById(R.id.time_display);
         timeButton.setOnClickListener(new View.OnClickListener() {
@@ -87,14 +99,10 @@ public class AlarmSetter extends WeguActivity {
     private void updateTimeDisplay() {
         // time button
         Button timeButton = (Button) findViewById(R.id.time_display);
-        int hour = getDisplayHourOfDay();
-        if (hour < 0)
-            hour = Calendar.getInstance().get(Calendar.HOUR);
-        int minute = getMinute();
-        if(minute < 0)
-            minute = Calendar.getInstance().get(Calendar.MINUTE);
-        timeButton.setText(hour + ":" + minute + " " + getAMorPM());
+
+        timeButton.setText(getDisplayHourOfDay(hours) + ":" + String.format("%02d",minutes) + " " + getAMorPM(hours));
     }
+
 
 
     private View.OnClickListener startAlarmListener = new View.OnClickListener() {
@@ -113,46 +121,40 @@ public class AlarmSetter extends WeguActivity {
     };
 
 
-    private  View.OnClickListener openAlarmDialog = new View.OnClickListener() {
+    private  View.OnClickListener setAlarmClickListener = new View.OnClickListener() {
         public void onClick(View view) {
-            StringBuilder sb = new StringBuilder("Alarm will fire on days: ");
-            for(int i=0;i<Constants.DAY_MAP.length;i++){
-
-                CheckBox cb = (CheckBox) findViewById(Constants.CHECKBOX_PREPEND + i);
-                if (cb.isChecked()){
-                    sb.append(Constants.DAY_MAP_NAMES[i]).append(", ");
-                }
+            // check to make sure at least one day has ben checked
+            List<String> daysAdded = daysAddedStringList(days);
+            if(daysAdded.isEmpty()){
+                Utils.longToastMessage(getApplicationContext(),"You must select at least one day for the alarm go off.");
+                return;
             }
-            sb.append(" at " ).append(getDisplayHourOfDay()).append(":").append(getMinute()).append(" ").append(getAMorPM());
-            Utils.shortToastMessage(getApplicationContext(),sb.toString());
+
+            for (int i = 0; i < Constants.DAY_MAP.length; i++) {
+                setBooleanPreference(Constants.DAY_PREPEND + String.valueOf(i), days[i]);
+            }
+
+            StringBuilder sb = new StringBuilder("Alarm will go off on ");
+            sb.append(Utils.join(daysAdded,", "));
+            setIntPreference(Constants.HOUR_OF_DAY, hours);
+            setIntPreference(Constants.MINUTE_OF_DAY,minutes);
+            sb.append(" at " ).append(getDisplayHourOfDay(hours)).append(":").append(minutes).append(" ").append(getAMorPM(hours));
+            Utils.reallyLongToastMessage(getApplicationContext(), sb.toString());
+
+            finish();
 
         }
     } ;
 
 
-    private View.OnClickListener stopAlarmListener = new View.OnClickListener() {
-        public void onClick(View v) {
-
-            AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
-            Toast cancelingToast = Utils.shortToastMessage(getApplicationContext(), "Canceling alarm.");
-            am.cancel(mainIntent);
-            Utils.shortToastMessage(getApplicationContext(), "Alarm canceled.", cancelingToast);
-
-        }
-    };
 
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case Constants.TIME_DIALOG_ID:
-                int hour = get24HourOfDay();
-                if (hour < 0)
-                    hour = Calendar.getInstance().get(Calendar.HOUR);
-                int minute = getMinute();
-                if(minute < 0)
-                    minute = Calendar.getInstance().get(Calendar.MINUTE);
+
                 return new TimePickerDialog(this,
-                        mTimeSetListener, hour, minute, false);
+                        mTimeSetListener, hours, minutes, false);
         }
         return null;
     }
@@ -160,11 +162,10 @@ public class AlarmSetter extends WeguActivity {
     private TimePickerDialog.OnTimeSetListener mTimeSetListener =
     new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            setIntPreference(Constants.HOUR_OF_DAY, hourOfDay);
-            setIntPreference(Constants.MINUTE_OF_DAY, minute);
+            minutes = minute;
+            hours = hourOfDay;
             updateTimeDisplay();
         }
     };
-
 
 }

@@ -16,9 +16,10 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">When Even Get Up?</string>
-    <string name="stop_alarm_button_text">Stop Alarm</string>
-    <string name="set_alarm_button_text">Set Alarm</string>
-    <string name="set_alarm_explanation">You are about to set an alarm.</string>
+    <string name="disable_alarm">Disable Alarm</string>
+    <string name="stop_alarm_button_text">Cancel</string>
+    <string name="set_alarm_button_text">Save</string>
+    <string name="set_alarm_explanation"></string>
     <string name="activity_sample_code">API Demos</string>
     <string name="welcome_top_blurb">Welcome to "Why Even Get Up?"  Set your alarm time and days of the week by hitting "Edit Alarm"</string>
     <string name="edit_alarm_button_text">Edit Alarm</string>

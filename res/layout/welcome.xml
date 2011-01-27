@@ -27,7 +27,16 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_weight="0"
             android:paddingBottom="4dip"
+            android:textSize="24dip"
             android:text="@string/welcome_top_blurb"/>
+
+    <TextView
+            android:id="@+id/welcome_date_display"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:paddingBottom="4dip"
+            android:textSize="24dip"
+            android:textStyle="bold"           />
 
     <Button
                 android:layout_margin="10px"
@@ -35,6 +44,15 @@
                 android:id="@+id/edit_alarm"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="@string/edit_alarm_button_text">
+            <requestFocus/>
+        </Button>
+
+    <Button
+                android:layout_margin="10px"
+                android:width="100px"
+                android:id="@+id/disable_alarm"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/disable_alarm">
             <requestFocus/>
         </Button>
 
