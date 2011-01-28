@@ -76,12 +76,14 @@ public class Welcome extends WeguActivity {
 
     private View.OnClickListener stopAlarmListener = new View.OnClickListener() {
         public void onClick(View v) {
+            Toast cancelingToast = Utils.shortToastMessage(getApplicationContext(), "Canceling alarm.");
 
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
-            Toast cancelingToast = Utils.shortToastMessage(getApplicationContext(), "Canceling alarm.");
             am.cancel(getAlarmPendingIntent());
             removeAlarmData();
+
             Utils.shortToastMessage(getApplicationContext(), "Alarm canceled.", cancelingToast);
+
             updateButtonsAndText();
         }
     };

@@ -36,27 +36,35 @@
             android:layout_weight="0"
             android:paddingBottom="4dip"
             android:textSize="24dip"
-            android:textStyle="bold"           />
+            android:textStyle="bold"  />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="horizontal"
+                  android:padding="4dip"
+                  android:gravity="bottom"
+                  android:layout_width="wrap_content" android:layout_height="fill_parent">
 
-    <Button
-                android:layout_margin="10px"
-                android:width="100px"
+        <Button
+                android:width="150px"
                 android:id="@+id/edit_alarm"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dip"
+                android:textStyle="bold"
                 android:text="@string/edit_alarm_button_text">
             <requestFocus/>
         </Button>
 
-    <Button
-                android:layout_margin="10px"
-                android:width="100px"
+        <Button
+                android:width="150px"
                 android:id="@+id/disable_alarm"
+                android:textSize="18dip"
+                android:textStyle="bold"
+
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="@string/disable_alarm">
             <requestFocus/>
         </Button>
-
-
+    </LinearLayout>
 
 
 </LinearLayout>

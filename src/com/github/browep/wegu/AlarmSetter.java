@@ -30,7 +30,6 @@ public class AlarmSetter extends WeguActivity {
     private int hours;
     private boolean[] days = new boolean[7];
 
-    PendingIntent mainIntent;
 
     private AlarmSetter self = this;
     /**
@@ -75,13 +74,9 @@ public class AlarmSetter extends WeguActivity {
 
         }
 
-        mainIntent = getAlarmPendingIntent();
 
         Button button = (Button) findViewById(R.id.start_alarm);
         button.setOnClickListener(setAlarmClickListener);
-
-//        Button cancelButton = (Button) findViewById(R.id.stop_alarm);
-//        cancelButton.setOnClickListener(stopAlarmListener);
 
         Button timeButton = (Button) findViewById(R.id.time_display);
         timeButton.setOnClickListener(new View.OnClickListener() {
@@ -104,23 +99,6 @@ public class AlarmSetter extends WeguActivity {
     }
 
 
-
-    private View.OnClickListener startAlarmListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Context context = getApplicationContext();
-            CharSequence text = "Starting alarm for " + MILLIS_IN_THE_FUTURE / 1000 + " seconds in the future.";
-            Toast startAlarmToast = Utils.shortToastMessage(context, text);
-            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-//            am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + MILLIS_IN_THE_FUTURE, mainIntent);
-            am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + MILLIS_IN_THE_FUTURE, mainIntent);
-
-            Utils.shortToastMessage(context, "Alarm set for " + MILLIS_IN_THE_FUTURE / 1000 + " seconds in the future.", startAlarmToast);
-
-        }
-    };
-
-
     private  View.OnClickListener setAlarmClickListener = new View.OnClickListener() {
         public void onClick(View view) {
             // check to make sure at least one day has ben checked
@@ -140,6 +118,13 @@ public class AlarmSetter extends WeguActivity {
             setIntPreference(Constants.MINUTE_OF_DAY,minutes);
             sb.append(" at " ).append(getDisplayHourOfDay(hours)).append(":").append(minutes).append(" ").append(getAMorPM(hours));
             Utils.reallyLongToastMessage(getApplicationContext(), sb.toString());
+
+            // cancel any old ones
+            AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+            am.cancel(getAlarmPendingIntent());
+
+            // set the new one
+            setAlarm(hours,minutes,days);
 
             finish();
 

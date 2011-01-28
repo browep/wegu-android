@@ -1,10 +1,14 @@
 package com.github.browep.wegu;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
+import com.github.browep.wegu.util.Log;
 
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -98,5 +102,36 @@ public abstract class WeguActivity extends Activity {
         removePreference(Constants.MINUTE_OF_DAY);
         for(int i=0;i<Constants.DAY_MAP.length;i++)
             removePreference(Constants.DAY_PREPEND + String.valueOf(i));
+    }
+
+    protected void setAlarm(int hours, int minutes, boolean[] days) {
+        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+        for(int i=0;i<Constants.DAY_MAP.length;i++){
+
+            if(days[i])
+                am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, timestampOfNextOccurenceOfDayAtTime(Constants.DAY_MAP[i],hours,minutes), Constants.WEEK_INTERVAL_MILLIS, getAlarmPendingIntent());
+        }
+    }
+
+
+    protected static long timestampOfNextOccurenceOfDayAtTime(int dayofweek, int hours, int minutes){
+        // get current day.
+        Calendar calendar = Calendar.getInstance();
+
+
+        // roll the calendar forward until the day of the week is the same
+        calendar.roll(Calendar.DATE,1);
+        while(calendar.get(Calendar.DATE) != dayofweek){
+            calendar.roll(Calendar.DATE,1);
+        }
+        // change the hour and minute
+        calendar.set(Calendar.HOUR_OF_DAY,hours);
+        calendar.set(Calendar.MINUTE,minutes);
+
+        Log.i("Setting alarm for day(int): " + calendar.get(Calendar.DAY_OF_WEEK) + " day(string): " + Constants.DAY_MAP_NAMES[calendar.get(Calendar.DAY_OF_WEEK) - 1] +
+            " at " + hours + ":" + minutes
+        );
+
+        return calendar.getTimeInMillis();
     }
 }

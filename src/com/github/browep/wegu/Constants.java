@@ -15,6 +15,8 @@ public class Constants {
     public static final String PREFS_FILE_NAME = "main_prefs_file";
     public static int CHECKBOX_PREPEND = 333000;
     public static final String CURRENT_DATE_LONG = "current_date_long";
+    public static final long WEEK_INTERVAL_MILLIS = 1000 * 60 * 60 * 24 * 7;
+
 
     static final int TIME_DIALOG_ID = 0;
 

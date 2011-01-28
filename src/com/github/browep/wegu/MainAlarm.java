@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import com.github.browep.wegu.util.Log;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -86,33 +87,34 @@ public class MainAlarm extends Activity
     {
 
         super.onCreate(savedInstanceState);
+        Log.i("ALARM FIRE!!!!");
 
-
-        final Window win = getWindow();
-        win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        // Turn on the screen unless we are being launched from the AlarmAlert
-        // subclass.
-        if (!getIntent().getBooleanExtra(Constants.SCREEN_OFF, false)) {
-            win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                    | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-                    | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
-        }
-
-	    // Create a LinearLayout in which to add the ImageView
-	    mLinearLayout = new LinearLayout(this);
-
-
-	    // Instantiate an ImageView and define its properties
-	    ImageView i = new ImageView(this);
-        String url = fetchContents(HOSTNAME + NEXT_IMAGE_PATH);
-        i.setImageDrawable(getDrawableFromUrl(url));
-	    i.setAdjustViewBounds(true); // set the ImageView bounds to match the Drawable's dimensions
-	    i.setLayoutParams(new Gallery.LayoutParams(Gallery.LayoutParams.WRAP_CONTENT, Gallery.LayoutParams.WRAP_CONTENT));
-
-	    // Add the ImageView to the layout and set the layout as the content view
-	    mLinearLayout.addView(i);
-	    setContentView(mLinearLayout);
+//
+//        final Window win = getWindow();
+//        win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+//                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+//        // Turn on the screen unless we are being launched from the AlarmAlert
+//        // subclass.
+//        if (!getIntent().getBooleanExtra(Constants.SCREEN_OFF, false)) {
+//            win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+//                    | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+//                    | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
+//        }
+//
+//	    // Create a LinearLayout in which to add the ImageView
+//	    mLinearLayout = new LinearLayout(this);
+//
+//
+//	    // Instantiate an ImageView and define its properties
+//	    ImageView i = new ImageView(this);
+//        String url = fetchContents(HOSTNAME + NEXT_IMAGE_PATH);
+//        i.setImageDrawable(getDrawableFromUrl(url));
+//	    i.setAdjustViewBounds(true); // set the ImageView bounds to match the Drawable's dimensions
+//	    i.setLayoutParams(new Gallery.LayoutParams(Gallery.LayoutParams.WRAP_CONTENT, Gallery.LayoutParams.WRAP_CONTENT));
+//
+//	    // Add the ImageView to the layout and set the layout as the content view
+//	    mLinearLayout.addView(i);
+//	    setContentView(mLinearLayout);
 
 //        updateLayout();
 
