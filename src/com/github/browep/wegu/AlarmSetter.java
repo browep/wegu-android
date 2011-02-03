@@ -1,18 +1,13 @@
 package com.github.browep.wegu;
 
 import android.app.*;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.View;
 import android.widget.*;
 import android.widget.Button;
-import com.github.browep.wegu.util.Log;
 import com.github.browep.wegu.util.Utils;
 
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 
 import android.widget.CheckBox;
@@ -28,7 +23,7 @@ public class AlarmSetter extends WeguActivity {
     private static final int MILLIS_IN_THE_FUTURE = 5 * 1000;
     private int minutes;
     private int hours;
-    private boolean[] days = new boolean[7];
+    private boolean[] days = new boolean[8];
 
 
     private AlarmSetter self = this;
@@ -40,19 +35,19 @@ public class AlarmSetter extends WeguActivity {
         super.onCreate(savedInstanceState);
 
         // initialize from stored or default to now
-        hours = getIntPreference(Constants.HOUR_OF_DAY);
+        hours = dao.getIntPreference(Constants.HOUR_OF_DAY);
         if(hours < 0)
             hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
-        minutes = getIntPreference(Constants.MINUTE_OF_DAY);
+        minutes = dao.getIntPreference(Constants.MINUTE_OF_DAY);
         if(minutes < 0)
             minutes = Calendar.getInstance().get(Calendar.MINUTE);
-        days = getDays();
+        days = dao.getDays();
 
         // we have to set the content view before we try and find the days of the week as they wont be there if we dont
         setContentView(R.layout.alarm_setter);
 
-        for (int i=0;i<Constants.DAY_MAP.length;i++) {
+        for (int i : new int[]{7,1,2,3,4,5,6} ) {
 
             final int id = i;
             final CheckBox checkBox;
@@ -67,7 +62,7 @@ public class AlarmSetter extends WeguActivity {
                     days[id] = checkBox.isChecked();
                 }
             });
-            if(i < 5)
+            if(!(i == 1 || i== 7))
                 ((LinearLayout) findViewById(R.id.days_of_week_layout)).addView(checkBox);
             else
                 ((LinearLayout) findViewById(R.id.sat_sun_layout)).addView(checkBox);
@@ -95,7 +90,7 @@ public class AlarmSetter extends WeguActivity {
         // time button
         Button timeButton = (Button) findViewById(R.id.time_display);
 
-        timeButton.setText(getDisplayHourOfDay(hours) + ":" + String.format("%02d",minutes) + " " + getAMorPM(hours));
+        timeButton.setText(Utils.getDisplayHourOfDay(hours) + ":" + String.format("%02d",minutes) + " " + Utils.getAMorPM(hours));
     }
 
 
@@ -109,22 +104,22 @@ public class AlarmSetter extends WeguActivity {
             }
 
             for (int i = 0; i < Constants.DAY_MAP.length; i++) {
-                setBooleanPreference(Constants.DAY_PREPEND + String.valueOf(i), days[i]);
+                dao.setBooleanPreference(Constants.DAY_PREPEND + String.valueOf(i), days[i]);
             }
 
             StringBuilder sb = new StringBuilder("Alarm will go off on ");
             sb.append(Utils.join(daysAdded,", "));
-            setIntPreference(Constants.HOUR_OF_DAY, hours);
-            setIntPreference(Constants.MINUTE_OF_DAY,minutes);
-            sb.append(" at " ).append(getDisplayHourOfDay(hours)).append(":").append(minutes).append(" ").append(getAMorPM(hours));
+            dao.setIntPreference(Constants.HOUR_OF_DAY, hours);
+            dao.setIntPreference(Constants.MINUTE_OF_DAY, minutes);
+            sb.append(" at " ).append(Utils.getDisplayHourOfDay(hours)).append(":").append(String.format("%02d",minutes)).append(" ").append(Utils.getAMorPM(hours));
             Utils.reallyLongToastMessage(getApplicationContext(), sb.toString());
 
             // cancel any old ones
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
-            am.cancel(getAlarmPendingIntent());
+            am.cancel(Utils.getAlarmPendingIntent(getApplicationContext()));
 
             // set the new one
-            setAlarm(hours,minutes,days);
+            setAlarm(hours, minutes, days);
 
             finish();
 

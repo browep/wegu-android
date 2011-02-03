@@ -31,14 +31,14 @@ public class Constants {
             Calendar.SUNDAY,
     };
 
-    public static String[] DAY_MAP_NAMES = new String[]{
+    public static String[] DAY_MAP_NAMES = new String[]{ null,
+            "Sunday",
             "Monday",
             "Tuesday",
             "Wednesday",
             "Thursday",
             "Friday",
             "Saturday",
-            "Sunday",
     };
     public static final String HOUR_OF_DAY = "hour_of_day";
     public static final String MINUTE_OF_DAY = "minute_of_day";

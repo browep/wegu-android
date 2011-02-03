@@ -7,10 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.github.browep.wegu.util.Log;
 import com.github.browep.wegu.util.Utils;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -41,16 +39,16 @@ public class Welcome extends WeguActivity {
 
         Button disableButton = ((Button)findViewById(R.id.disable_alarm));
 
-        int hours = getIntPreference(Constants.HOUR_OF_DAY);
-        int minutes = getIntPreference(Constants.MINUTE_OF_DAY);
-        boolean[] days = getDays();
-        String amPm = getAMorPM(hours);
+        int hours = dao.getIntPreference(Constants.HOUR_OF_DAY);
+        int minutes = dao.getIntPreference(Constants.MINUTE_OF_DAY);
+        boolean[] days = dao.getDays();
+        String amPm = Utils.getAMorPM(hours);
 
         List<String> daysAdded = daysAddedStringList(days);
 
         TextView daysDisplay = (TextView) findViewById(R.id.welcome_date_display);
         if(!(hours < 0 || minutes < 0)){
-            daysDisplay.setText("Alarm is currently set for " + getDisplayHourOfDay(hours) + ":" + String.format("%02d",minutes) + " " + amPm + " on " + Utils.join(daysAdded, ", "));
+            daysDisplay.setText("Alarm is currently set for " + Utils.getDisplayHourOfDay(hours) + ":" + String.format("%02d",minutes) + " " + amPm + " on " + Utils.join(daysAdded, ", "));
             disableButton.setVisibility(View.VISIBLE);
             ((Button)findViewById(R.id.edit_alarm)).setText("Edit Alarm");
 
@@ -79,7 +77,7 @@ public class Welcome extends WeguActivity {
             Toast cancelingToast = Utils.shortToastMessage(getApplicationContext(), "Canceling alarm.");
 
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
-            am.cancel(getAlarmPendingIntent());
+            am.cancel(Utils.getAlarmPendingIntent(getApplicationContext()));
             removeAlarmData();
 
             Utils.shortToastMessage(getApplicationContext(), "Alarm canceled.", cancelingToast);

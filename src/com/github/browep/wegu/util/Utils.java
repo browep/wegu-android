@@ -1,10 +1,13 @@
 package com.github.browep.wegu.util;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 import com.github.browep.wegu.Constants;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -59,5 +62,52 @@ public class Utils {
             }
         }
         return buffer.toString();
+    }
+
+    public static long timestampOfNextOccurenceOfDayAtTime(int dayofweek, int hours, int minutes){
+        // get current day.
+        Calendar calendar = Calendar.getInstance();
+
+
+        // roll the calendar forward until the day of the week is the same
+        // if we missed the this time of day, roll forward a day to before checking for the correct day
+        if(hours < calendar.get(Calendar.HOUR_OF_DAY) || (hours == calendar.get(Calendar.HOUR_OF_DAY) && minutes <= calendar.get(Calendar.MINUTE)))
+            calendar.roll(Calendar.DATE,1);
+
+        while(calendar.get(Calendar.DAY_OF_WEEK) != dayofweek){
+            calendar.roll(Calendar.DATE,1);
+        }
+        // change the hour and minute
+        calendar.set(Calendar.HOUR_OF_DAY,hours);
+        calendar.set(Calendar.MINUTE,minutes);
+
+        Log.i("Setting alarm for day(int): " + calendar.get(Calendar.DAY_OF_WEEK) + " day(string): " + Constants.DAY_MAP_NAMES[calendar.get(Calendar.DAY_OF_WEEK) ] +
+            " at " + hours + ":" + minutes
+        );
+
+        return calendar.getTimeInMillis();
+    }
+
+    public static String getAMorPM(int hour) {
+        if(hour < 12)
+            return "AM";
+        else
+            return "PM";
+    }
+
+    public static int getDisplayHourOfDay(int hour){
+        hour = hour % 12;
+        if(hour == 0)
+            return 12;
+        else
+            return hour;
+    }
+
+
+    public static PendingIntent getAlarmPendingIntent(Context context) {
+        Intent intent = new Intent(Constants.ALARM_ALERT_ACTION);
+
+        return PendingIntent.getBroadcast(
+                context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 }
