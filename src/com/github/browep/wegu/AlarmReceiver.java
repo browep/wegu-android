@@ -3,6 +3,7 @@ package com.github.browep.wegu;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import com.github.browep.wegu.util.AlarmAlertWakeLock;
 import com.github.browep.wegu.util.Log;
 
@@ -19,26 +20,17 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent){
         Log.i("AlarmReceiver received an alarm");
-            // Send a text notification to the screen.
-//        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//        Notification notification = new Notification(0, "WEGU Alarm!", System.currentTimeMillis());
-//        nm.notify(0, notification);
-
-//        Utils.shortToastMessage(context,"WEGU Alarm!");
-
-        // acquire cpu lock
         AlarmAlertWakeLock.acquireCpuWakeLock(context);
 
         Intent playAlarm = new Intent(context,MainAlarm.class);
+        playAlarm.putExtra(Constants.FROM_ALARM,true);
         playAlarm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
+        playAlarm.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         context.startActivity(playAlarm);
 
-
-
-
-
    }
+
+
 
 }

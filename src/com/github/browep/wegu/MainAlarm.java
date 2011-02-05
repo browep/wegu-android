@@ -2,6 +2,7 @@ package com.github.browep.wegu;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -23,6 +24,8 @@ import java.beans.Visibility;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MainAlarm extends WeguActivity
 {
@@ -102,6 +105,27 @@ public class MainAlarm extends WeguActivity
         super.onCreate(savedInstanceState);
         Log.i("ALARM FIRE!!!!");
 
+        if(getIntent().getExtras() != null){
+            Log.i("we have NOT null extras: " + getIntent().getExtras());
+            Log.i(Constants.FROM_ALARM + " was  " + getIntent().getExtras().getBoolean(Constants.FROM_ALARM));
+        }else{
+            Log.i("extras was null");
+        }
+
+        // this was not from the alarm, go back to the welcome screen
+//        if(getIntent().getExtras() == null || !getIntent().getExtras().getBoolean(Constants.FROM_ALARM)){
+//            Log.i("Alarm was not started from the alarm receiver, showing welcome");
+
+//            Intent welcomeIntent = new Intent(getApplicationContext(),Welcome.class);
+//            welcomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            getApplicationContext().startActivity(welcomeIntent);
+//            finish();
+//            return;
+//        }else{
+//            Log.i("Alarm was from alarm receiver.  Firing alarm");
+//        }
+
+
 
         final Window win = getWindow();
         win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
@@ -134,11 +158,22 @@ public class MainAlarm extends WeguActivity
         });
 
         // vibrate the phone
+        List<Long> _pattern = new LinkedList<Long>();
+        for (int j = 0; j < 10; j++) {
+            _pattern.add(300L);
+            _pattern.add(500L);
+            _pattern.add(300L);
+            _pattern.add(500L);
+            _pattern.add(300L);
+            _pattern.add(1000L);
+        }
+
+        long[] pattern = new long[_pattern.size()];
+        for(int j =0;j<_pattern.size();j++)
+            pattern[j] = _pattern.get(j);
 
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-        long[] pattern = {0, 500, 300, 500, 300, 1000, 300};
-        v.vibrate(pattern, 0);
+        v.vibrate(pattern, -1);
 
         // play sound
 

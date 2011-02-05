@@ -80,6 +80,7 @@ public class Utils {
         // change the hour and minute
         calendar.set(Calendar.HOUR_OF_DAY,hours);
         calendar.set(Calendar.MINUTE,minutes);
+        calendar.set(Calendar.SECOND,0);
 
         Log.i("Setting alarm for day(int): " + calendar.get(Calendar.DAY_OF_WEEK) + " day(string): " + Constants.DAY_MAP_NAMES[calendar.get(Calendar.DAY_OF_WEEK) ] +
             " at " + hours + ":" + minutes
