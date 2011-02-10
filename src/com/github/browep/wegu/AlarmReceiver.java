@@ -19,6 +19,11 @@ public class AlarmReceiver extends BroadcastReceiver {
       // Display an alert that we've received a message.
     @Override
     public void onReceive(Context context, Intent intent){
+
+        Dao dao = new Dao(context.getSharedPreferences(Constants.PREFS_FILE_NAME,0));
+
+        dao.setBooleanPreference(Constants.DO_ALARM,true);
+
         Log.i("AlarmReceiver received an alarm");
         AlarmAlertWakeLock.acquireCpuWakeLock(context);
 

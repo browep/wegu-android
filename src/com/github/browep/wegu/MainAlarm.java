@@ -105,6 +105,20 @@ public class MainAlarm extends WeguActivity
         super.onCreate(savedInstanceState);
         Log.i("ALARM FIRE!!!!");
 
+        if(dao.getBooleanPreference(Constants.DO_ALARM)){
+            Log.i("do_alarm was set to true, doing alarm");
+            dao.setBooleanPreference(Constants.DO_ALARM,false);
+        } else {
+            Log.i("do_alarm was set to false, doing welcome screen");
+            Intent welcomeIntent = new Intent(getApplicationContext(), Welcome.class);
+            welcomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getApplicationContext().startActivity(welcomeIntent);
+            finish();
+            return;
+
+        }
+
+
         if(getIntent().getExtras() != null){
             Log.i("we have NOT null extras: " + getIntent().getExtras());
             Log.i(Constants.FROM_ALARM + " was  " + getIntent().getExtras().getBoolean(Constants.FROM_ALARM));
