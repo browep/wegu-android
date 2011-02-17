@@ -33,14 +33,15 @@
             <!--</intent-filter>-->
         <!--</activity>-->
 
+        <receiver android:name=".AlarmReceiver" android:process=":remote" />
 
-        <receiver android:name="AlarmReceiver">
-            <intent-filter>
-                <action android:name="com.github.browep.wegu.ALARM_ALERT" />
-                <action android:name="alarm_killed" />
-                <action android:name="cancel_snooze" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver android:name=".AlarmReceiver" android:process=":remote" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.github.browep.wegu.ALARM_ALERT" />-->
+                <!--<action android:name="alarm_killed" />-->
+                <!--<action android:name="cancel_snooze" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <receiver android:name="BootReceiver"
                   android:enabled="true"
