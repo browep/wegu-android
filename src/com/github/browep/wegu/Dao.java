@@ -3,6 +3,8 @@ package com.github.browep.wegu;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.SyncStateContract;
+import com.github.browep.wegu.util.Log;
 import com.github.browep.wegu.util.Utils;
 
 
@@ -21,16 +23,18 @@ public class Dao {
         this.sharedPreferences = sharedPreferences;
     }
 
-    public static void setAlarm(int hours, int minutes, boolean[] days, AlarmManager am, Context context) {
-        for (int i = 0; i < Constants.DAY_MAP.length; i++) {
-            if (days[i])
-                am.setRepeating(AlarmManager.RTC_WAKEUP, Utils.timestampOfNextOccurenceOfDayAtTime(i, hours, minutes), Constants.WEEK_INTERVAL_MILLIS, Utils.getAlarmPendingIntent(context));
-        }
+    public Dao(Context context){
+        this.sharedPreferences = context.getSharedPreferences(Constants.PREFS_FILE_NAME,0);
+    }
+
+    public static void setAlarm(int hours, int minutes, AlarmManager am, Context context) {
+        am.cancel(Utils.getAlarmPendingIntent(context));
+        am.setRepeating(AlarmManager.RTC_WAKEUP, Utils.nearestFireTimeForDay(hours,minutes), Constants.DAY_INTERVAL_MILLIS, Utils.getAlarmPendingIntent(context));
     }
 
     public boolean[] getDays() {
         boolean[] temp_days = new boolean[8];
-        for (int i = 0; i < Constants.DAY_MAP.length; i++) {
+        for (int i = 1; i < 8; i++) {
             temp_days[i] = getBooleanPreference(Constants.DAY_PREPEND + String.valueOf(i));
         }
         return temp_days;
@@ -59,13 +63,14 @@ public class Dao {
     }
 
     public void setIntPreference(String prefName, int value) {
-
+        Log.i("DAO: set INT pref " + prefName + "->" + String.valueOf(value));
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(prefName, value);
         editor.commit();
     }
 
     public void setBooleanPreference(String prefName, boolean value) {
+        Log.i("DAO: set BOOLEAN pref " + prefName + "->" + String.valueOf(value));
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(prefName, value);

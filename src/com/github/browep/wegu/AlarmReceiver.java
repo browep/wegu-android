@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.github.browep.wegu.util.AlarmAlertWakeLock;
 import com.github.browep.wegu.util.Log;
+import com.github.browep.wegu.util.Utils;
+
+import java.util.Calendar;
 
 
 /**
@@ -19,20 +22,28 @@ public class AlarmReceiver extends BroadcastReceiver {
       // Display an alert that we've received a message.
     @Override
     public void onReceive(Context context, Intent intent){
-
-        Dao dao = new Dao(context.getSharedPreferences(Constants.PREFS_FILE_NAME,0));
-
-        dao.setBooleanPreference(Constants.DO_ALARM,true);
-
         Log.i("AlarmReceiver received an alarm");
-        AlarmAlertWakeLock.acquireCpuWakeLock(context);
 
-        Intent playAlarm = new Intent(context,MainAlarm.class);
-        playAlarm.putExtra(Constants.FROM_ALARM,true);
-        playAlarm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        playAlarm.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        Dao dao = new Dao(context);
 
-        context.startActivity(playAlarm);
+        // check to see we actually want to fire the alarm on this day
+        int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        if (dao.getBooleanPreference(Constants.DAY_PREPEND + dayOfWeek)) {
+            Log.i("We DO WANT to fire alarm for " + dayOfWeek + "->" + Constants.DAY_MAP_NAMES[dayOfWeek]);
+
+            dao.setBooleanPreference(Constants.DO_ALARM, true);
+
+            AlarmAlertWakeLock.acquireCpuWakeLock(context);
+
+            Intent playAlarm = new Intent(context, MainAlarm.class);
+            playAlarm.putExtra(Constants.FROM_ALARM, true);
+            playAlarm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            playAlarm.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+            context.startActivity(playAlarm);
+        } else {
+            Log.i("We DONT WANT to fire alarm for " + dayOfWeek + "->" + Constants.DAY_MAP_NAMES[dayOfWeek]);
+        }
 
    }
 

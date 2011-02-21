@@ -25,23 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--<activity android:name=".BootAlarmSetter"-->
-                  <!--android:label="@string/app_name">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
 
-        <receiver android:name=".AlarmReceiver" android:process=":remote" />
-
-        <!--<receiver android:name=".AlarmReceiver" android:process=":remote" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.github.browep.wegu.ALARM_ALERT" />-->
-                <!--<action android:name="alarm_killed" />-->
-                <!--<action android:name="cancel_snooze" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <receiver android:name=".AlarmReceiver" android:process=":remote" >
+            <intent-filter>
+                <action android:name="com.github.browep.wegu.ALARM_ALERT" />
+            </intent-filter>
+        </receiver>
 
         <receiver android:name="BootReceiver"
                   android:enabled="true"

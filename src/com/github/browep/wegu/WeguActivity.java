@@ -28,7 +28,7 @@ public abstract class WeguActivity extends Activity {
 
     protected List<String> daysAddedStringList(boolean[] days) {
         List<String> daysAdded = new LinkedList<String>();
-        for (int i = 0; i < Constants.DAY_MAP.length; i++) {
+        for (int i = 1; i < 8; i++) {
             if (days[i])
                 daysAdded.add(Constants.DAY_MAP_NAMES[i]);
         }
@@ -38,12 +38,12 @@ public abstract class WeguActivity extends Activity {
     protected void removeAlarmData() {
         dao.removePreference(Constants.HOUR_OF_DAY);
         dao.removePreference(Constants.MINUTE_OF_DAY);
-        for (int i = 0; i < Constants.DAY_MAP.length; i++)
+        for (int i = 0; i < 8; i++)
             dao.removePreference(Constants.DAY_PREPEND + String.valueOf(i));
     }
 
-    protected void setAlarm(int hours, int minutes, boolean[] days) {
-        Dao.setAlarm(hours, minutes, days, (AlarmManager) getSystemService(ALARM_SERVICE),getApplicationContext());
+    protected void setAlarm(int hours, int minutes) {
+        Dao.setAlarm(hours, minutes, (AlarmManager) getSystemService(ALARM_SERVICE),getApplicationContext());
     }
 
 

@@ -1,6 +1,7 @@
 package com.github.browep.wegu;
 
 import android.app.*;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
@@ -105,7 +106,7 @@ public class AlarmSetter extends WeguActivity {
                 return;
             }
 
-            for (int i = 0; i < Constants.DAY_MAP.length; i++) {
+            for (int i = 1; i <= 7; i++) {
                 dao.setBooleanPreference(Constants.DAY_PREPEND + String.valueOf(i), days[i]);
             }
 
@@ -118,27 +119,9 @@ public class AlarmSetter extends WeguActivity {
 
             // cancel any old ones
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
-            am.cancel(Utils.getAlarmPendingIntent(getApplicationContext()));
 
-            // set the new one
-//            for (int i = 0; i < Constants.DAY_MAP.length; i++) {
-//                if (days[i]) {
-//                    Intent intent = new Intent(AlarmSetter.this, AlarmReceiver.class);
-//                    PendingIntent sender = PendingIntent.getBroadcast(AlarmSetter.this,
-//                            0, intent, 0);
-//                    am.setRepeating(AlarmManager.RTC_WAKEUP, Utils.timestampOfNextOccurenceOfDayAtTime(i, hours, minutes), Constants.WEEK_INTERVAL_MILLIS, sender);
-//                }
-//            }
-            // We want the alarm to go off 30 seconds from now.
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
-            calendar.add(Calendar.SECOND, 12);
-
-            Intent intent = new Intent(AlarmSetter.this, AlarmReceiver.class);
-            PendingIntent sender = PendingIntent.getBroadcast(AlarmSetter.this,
-                    0, intent, 0);
             // Schedule the alarm!
-            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), Constants.WEEK_INTERVAL_MILLIS, sender);
+            setAlarm(hours,minutes);
 
             finish();
 

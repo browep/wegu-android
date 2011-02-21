@@ -111,4 +111,18 @@ public class Utils {
         return PendingIntent.getBroadcast(
                 context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
+
+    public static long nearestFireTimeForDay(int hours, int minutes){
+        Calendar calendar = Calendar.getInstance();
+        if(hours < calendar.get(Calendar.HOUR_OF_DAY) || (hours == calendar.get(Calendar.HOUR_OF_DAY) && minutes <= calendar.get(Calendar.MINUTE)))
+            calendar.roll(Calendar.DATE,1);
+
+        calendar.set(Calendar.HOUR_OF_DAY,hours);
+        calendar.set(Calendar.MINUTE,minutes);
+        calendar.set(Calendar.SECOND,0);
+
+        Log.i("next day fire time: " + calendar.getTime());
+        return calendar.getTimeInMillis();
+
+    }
 }

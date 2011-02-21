@@ -29,7 +29,7 @@ public class BootAlarmSetter extends Service {
 
         boolean[] days = dao.getDays();
 
-        Dao.setAlarm(hours, minutes, days, (AlarmManager) getSystemService(ALARM_SERVICE),getApplicationContext());
+        Dao.setAlarm(hours, minutes, (AlarmManager) getSystemService(ALARM_SERVICE),getApplicationContext());
 
         Log.i("Done setting alarm");
         stopSelf();
