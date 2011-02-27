@@ -207,4 +207,11 @@ public class MainAlarm extends WeguActivity
         }
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();    //To change body of overridden methods use File | Settings | File Templates.
+        moveTaskToBack(true);
+        finish();
+    }
 }

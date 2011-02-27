@@ -38,7 +38,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             Intent playAlarm = new Intent(context, MainAlarm.class);
             playAlarm.putExtra(Constants.FROM_ALARM, true);
             playAlarm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            playAlarm.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            playAlarm.addFlags(16384);
 
             context.startActivity(playAlarm);
         } else {
