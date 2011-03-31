@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:gravity="bottom"
     >
     <ImageView
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,7 +18,7 @@
             android:text="@string/alarm_off"
             android:textSize="36dp"
             android:layout_width="fill_parent"
-               android:layout_height="fill_parent"
+               android:layout_height="72px"
                android:height="48dp"
 
 

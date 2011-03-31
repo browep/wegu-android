@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import com.flurry.android.FlurryAgent;
 import com.github.browep.wegu.util.Log;
 
 import javax.print.attribute.standard.Media;
@@ -24,12 +25,15 @@ import java.beans.Visibility;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MainAlarm extends WeguActivity
 {
-    LinearLayout mLinearLayout;
+  public static final String ALARM__FIRE = "ALARM_FIRE";
+  LinearLayout mLinearLayout;
     Vibrator v;
     MediaPlayer mMediaPlayer;
 
@@ -104,6 +108,7 @@ public class MainAlarm extends WeguActivity
 
         super.onCreate(savedInstanceState);
         Log.i("ALARM FIRE!!!!");
+      FlurryAgent.onEvent(ALARM__FIRE);
 
         if(dao.getBooleanPreference(Constants.DO_ALARM)){
             Log.i("do_alarm was set to true, doing alarm");
@@ -159,6 +164,10 @@ public class MainAlarm extends WeguActivity
 	    // Instantiate an ImageView and define its properties
 	    ImageView i = (ImageView) findViewById(R.id.image_view);
         String url = fetchContents(HOSTNAME + NEXT_IMAGE_PATH);
+      Map<String,String> params = new HashMap<String,String>();
+      params.put("URL",url);
+      FlurryAgent.onEvent("FETCHED_URL",params);
+
         i.setImageDrawable(getDrawableFromUrl(url));
 
         // setup the off button

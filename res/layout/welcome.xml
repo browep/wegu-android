@@ -41,7 +41,9 @@
                   android:orientation="horizontal"
                   android:padding="4dip"
                   android:gravity="bottom"
-                  android:layout_width="wrap_content" android:layout_height="fill_parent">
+                  android:layout_width="wrap_content"
+                  android:layout_height="fill_parent"
+            >
 
         <Button
                 android:width="150px"

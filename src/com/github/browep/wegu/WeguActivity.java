@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import com.flurry.android.FlurryAgent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -46,5 +47,16 @@ public abstract class WeguActivity extends Activity {
         Dao.setAlarm(hours, minutes, (AlarmManager) getSystemService(ALARM_SERVICE),getApplicationContext());
     }
 
+  @Override
+  protected void onStart() {
+    super.onStart();
+    FlurryAgent.onStartSession(this, "9CH766MN9XHGAHDT39YI");
 
+  }
+
+  public void onStop() {
+    super.onStop();
+    FlurryAgent.onEndSession(this);
+    // your code
+  }
 }
